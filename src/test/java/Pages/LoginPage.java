@@ -4,6 +4,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
 import java.time.Duration;
 
 public class LoginPage {
@@ -33,72 +34,53 @@ public class LoginPage {
 
     public void login(String user, String pass) {
 
-        // اكتب البيانات
-        driver.findElement(usernameField).clear();
-        driver.findElement(usernameField).sendKeys(user);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
 
-        driver.findElement(passwordField).clear();
-        driver.findElement(passwordField).sendKeys(pass);
+        WebElement u = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
+        u.clear();
+        u.sendKeys(user);
 
-        // حاول مرتين (لأن الـ chat أحياناً يظهر بعد ثانية)
-        for (int i = 0; i < 2; i++) {
-            try {
-                hideZohoChatHard(); // ✅ يخفي الـ chat بالكامل
+        WebElement p = wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
+        p.clear();
+        p.sendKeys(pass);
 
-                WebElement btn = new WebDriverWait(driver, Duration.ofSeconds(15))
-                        .until(ExpectedConditions.presenceOfElementLocated(loginButton));
+        // اخفاء شات Zoho (احتياط)
+        hideZohoChatHard();
 
-                ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
+        // ✅ الحل النهائي: لا نضغط زر Sign in أصلاً
+        // 1) جرّب ENTER
+        try {
+            p.sendKeys(Keys.ENTER);
+        } catch (Exception ignored) {}
 
-                // ✅ JS click يتجاوز أي overlay
-                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
-
-                return; // نجاح
-
-            } catch (ElementClickInterceptedException e) {
-                // لو رجع overlay، نخفيه مرة ثانية ونعيد المحاولة
-                hideZohoChatHard();
-            }
-        }
-
-        throw new RuntimeException("Login button still intercepted after hiding Zoho chat.");
+        // 2) إذا ما اشتغل ENTER، نفذ submit للفورم بالـ JS (يتجاوز أي overlay)
+        try {
+            ((JavascriptExecutor) driver).executeScript(
+                    "const btn = document.evaluate(arguments[0], document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;" +
+                            "if(btn){ const f = btn.closest('form'); if(f) f.submit(); }",
+                    getLoginButtonXPath()
+            );
+        } catch (Exception ignored) {}
     }
 
-    /**
-     * إخفاء Zoho SalesIQ / zsiq widgets + iframes بشكل قوي
-     */
+    /** XPath زر الدخول كـ String (نستخدمه داخل JS) */
+    private String getLoginButtonXPath() {
+        return "//button[contains(.,'Sign in') or contains(.,'Login') or @type='submit']";
+    }
+
+    /** إخفاء Zoho SalesIQ / zsiq widgets + iframes */
     private void hideZohoChatHard() {
         try {
-            JavascriptExecutor js = (JavascriptExecutor) driver;
-
-            js.executeScript(
-                    "const sels = [" +
-                            "'#zsiqchat'," +
-                            "'.zsiq_float'," +
-                            "'.zsiq_theme1'," +
-                            "'.zsiqf'," +
-                            "'.zsiq-m0'," +
-                            "'.zsiq-clr6'," +
-                            "'[id*=zsiq]'," +
-                            "'[class*=zsiq]'," +
-                            "'iframe[id*=zsiq]'," +
-                            "'iframe[src*=salesiq]'," +
-                            "'iframe[src*=zoho]'" +
+            ((JavascriptExecutor) driver).executeScript(
+                    "const sels=[" +
+                            "'#zsiqchat','[id*=zsiq]','[class*=zsiq]'," +
+                            "'iframe[id*=zsiq]','iframe[src*=salesiq]','iframe[src*=zoho]'" +
                             "];" +
-                            "sels.forEach(s => document.querySelectorAll(s).forEach(el => {" +
-                            "el.style.display='none'; el.style.visibility='hidden'; el.style.pointerEvents='none';" +
-                            "}));" +
-                            "document.querySelectorAll('iframe').forEach(f => {" +
-                            "try {" +
-                            "const src=(f.getAttribute('src')||''); const id=(f.id||'');" +
-                            "if(src.includes('salesiq') || src.includes('zoho') || id.includes('zsiq')) {" +
-                            "f.style.display='none'; f.style.visibility='hidden'; f.style.pointerEvents='none';" +
-                            "}" +
-                            "} catch(e){}" +
-                            "});"
+                            "sels.forEach(s=>document.querySelectorAll(s).forEach(el=>{" +
+                            "el.style.display='none';el.style.visibility='hidden';el.style.pointerEvents='none';" +
+                            "}));"
             );
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 }
 
