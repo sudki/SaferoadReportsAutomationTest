@@ -16,11 +16,10 @@ public class LoginPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
-    // ✅ Locators أدق من DOM (يغطي أكثر من احتمال)
-    private final By username = By.xpath("//input[@id='username' or @name='username' or @placeholder='Username' or @type='text']");
-    private final By password = By.xpath("//input[@id='password' or @name='password' or @placeholder='Password' or @type='password']");
 
-    // زر تسجيل الدخول (أكثر من شرط لتفادي اختلاف النص/اللغة)
+    private final By username = By.id("username");
+    private final By password = By.id("password");
+
     private final By signInBtn = By.xpath("//button[@type='submit' or contains(.,'Sign In') or contains(.,'Login') or contains(.,'تسجيل')]");
 
     // عنصر يؤكد نجاح الدخول (من الـ sidebar حسب DOM اللي أرسلته)
