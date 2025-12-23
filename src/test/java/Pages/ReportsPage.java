@@ -43,14 +43,17 @@ public class ReportsPage {
     }
 
     public void clickShowReports() {
-        jsClick(showReportsBtn);
+        WebElement btn = wait.until(ExpectedConditions.presenceOfElementLocated(showReportsBtn));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
 
-        // انتظر شوي “حتى يبدأ” أي تغيير (overlay أو rows)
-        wait.until(driver ->
-                !driver.findElements(agLoadingOverlay).isEmpty()
-                        || driver.findElements(tableRows).size() > 0
-                        || !driver.findElements(agNoRowsOverlay).isEmpty()
-        );
+        // جرّب click عادي، لو انحجب → JS click
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(showReportsBtn)).click();
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        }
+
+        System.out.println("✅ Clicked: Show Reports");
     }
 
     public boolean isReportHasData() {

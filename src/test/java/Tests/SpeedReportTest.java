@@ -8,7 +8,7 @@ import Pages.ReportsPage;
 
 public class SpeedReportTest extends BaseTest{
 
-    @Test(enabled = false)
+    @Test//(enabled = false)
     public void checkOverSpeedReport() {
 
         LoginPage login = new LoginPage(driver);
@@ -19,7 +19,10 @@ public class SpeedReportTest extends BaseTest{
         reportsPage.selectAllVehicles();
         reportsPage.clickShowReports();
 
-        Assert.assertTrue(reportsPage.isReportHasData(), "Over Speed Report has no data");
+        boolean hasData = reportsPage.isReportHasData();
+        System.out.println("📌 Over Speed Report hasData = " + hasData);
+
+        Assert.assertTrue(hasData, "Over Speed Report has NO data");
     }
 
 }

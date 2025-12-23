@@ -22,7 +22,10 @@ public class TripReportTest extends BaseTest {
         reportsPage.selectAllVehicles();
         reportsPage.clickShowReports();
 
-        Assert.assertTrue(reportsPage.isReportHasData(), "Trip Report has no data");
+        boolean hasData = reportsPage.isReportHasData();
+        System.out.println("📌 Trip Report hasData = " + hasData);
+
+        Assert.assertTrue(hasData, "Trip Report has NO data");
     }
 
 }
