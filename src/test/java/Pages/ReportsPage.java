@@ -23,6 +23,8 @@ public class ReportsPage {
     private By selectAllVehicles = By.xpath("//span[contains(@class,'rc-tree-checkbox')][1]");
     private By showReportsBtn = By.xpath("//button[contains(@class,'btn-primary') and contains(.,'Show Reports')]");
     private By tableRows = By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0");
+    private By agNoRowsOverlay = By.cssSelector(".ag-overlay-no-rows-center");
+    private By agLoadingOverlay = By.cssSelector(".ag-overlay-loading-center");
 
     private void jsClick(By locator) {
         WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
@@ -42,17 +44,47 @@ public class ReportsPage {
 
     public void clickShowReports() {
         jsClick(showReportsBtn);
+
+        // انتظر شوي “حتى يبدأ” أي تغيير (overlay أو rows)
+        wait.until(driver ->
+                !driver.findElements(agLoadingOverlay).isEmpty()
+                        || driver.findElements(tableRows).size() > 0
+                        || !driver.findElements(agNoRowsOverlay).isEmpty()
+        );
     }
 
     public boolean isReportHasData() {
         try {
-            List<WebElement> rows =
-                    wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(tableRows));
-            return !rows.isEmpty();
+            wait.until(driver -> {
+
+                // 1️⃣ لو لسه فيه Loading لا نعتبرها نتيجة
+                boolean loading = !driver.findElements(agLoadingOverlay).isEmpty();
+                if (loading) return false;
+
+                // 2️⃣ تحقق من وجود صفوف أو رسالة no rows
+                int rows = driver.findElements(tableRows).size();
+                boolean noRows = !driver.findElements(agNoRowsOverlay).isEmpty();
+
+                return rows > 0 || noRows;
+            });
+
+            int finalRowsCount = driver.findElements(tableRows).size();
+
+            if (finalRowsCount > 0) {
+                System.out.println("✅ SUCCESS: Report contains data. Rows count = " + finalRowsCount);
+                return true;
+            } else {
+                System.out.println("⚠️ INFO: Report loaded but NO data found (No Rows Overlay shown)");
+                return false;
+            }
+
         } catch (TimeoutException e) {
+            System.out.println("❌ ERROR: Timeout while waiting for report data to load");
             return false;
         }
     }
+
+
     //overspeeding report
     public void openOverSpeedReport() {
         jsClick(sidebarToggleBtn);
