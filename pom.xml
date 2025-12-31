@@ -40,15 +40,18 @@
 
     <build>
         <plugins>
-            <!-- تشغيل TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
+
                 <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
+                    <!-- ✅ شغّل TestNG Suite -->
+                    <suiteXmlFiles>
+                        <suiteXmlFile>testng-daily-reports.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+
+                    <!-- (اختياري) نفس إعدادك السابق -->
                     <properties>
                         <property>
                             <name>usedefaultlisteners</name>
@@ -56,7 +59,9 @@
                         </property>
                     </properties>
                 </configuration>
+
             </plugin>
         </plugins>
     </build>
+
 </project>
