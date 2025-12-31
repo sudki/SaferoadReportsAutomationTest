@@ -24,5 +24,6 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
-      - name: Run tests
-        run: mvn clean test
+      - name: Run TestNG suite
+        run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
+
