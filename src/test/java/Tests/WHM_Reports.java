@@ -1,10 +1,11 @@
 package Tests;
 
 import Base.BaseTest;
-import Pages.LoginPage;
-import Pages.ReportsPage;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import Pages.LoginPage;
+import Pages.ReportsPage;
 
 public class WHM_Reports extends BaseTest {
 
