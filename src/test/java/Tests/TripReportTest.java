@@ -23,7 +23,7 @@ public class TripReportTest extends BaseTest {
         reportsPage.clickShowReports();
 
         boolean hasData = reportsPage.isReportHasData();
-        System.out.println("📌 Trip Report hasData = " + hasData);
+        System.out.println("✅  Trip Report hasData = " + hasData);
 
         Assert.assertTrue(hasData, "Trip Report has NO data");
     }
