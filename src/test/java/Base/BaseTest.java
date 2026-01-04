@@ -22,9 +22,10 @@ public class BaseTest {
         ChromeOptions options = new ChromeOptions();
         if ("true".equalsIgnoreCase(System.getenv("CI"))) {
             options.addArguments("headless=new");
+            options.addArguments("window-size=1920,1080");
             options.addArguments("no-sandbox");
             options.addArguments("disable-dev-shm-usage");
-            options.addArguments("window-size=1920,1080");
+
         }
         // تشغيل Chrome بوضع Guest (بدون Google Account / Sync)
         options.addArguments("--guest");
@@ -44,7 +45,6 @@ public class BaseTest {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
         driver.get("https://track.saferoad.net/auth/signin");
     }
 

@@ -74,35 +74,42 @@ public class ReportsPage {
 
     public boolean isReportHasData() {
         try {
-            wait.until(driver -> {
+            int timeoutSeconds = Integer.parseInt(System.getProperty("WAIT_SECONDS", "90"));
+            WebDriverWait longWait = new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
 
-                // 1️⃣ لو لسه فيه Loading لا نعتبرها نتيجة
-                boolean loading = !driver.findElements(agLoadingOverlay).isEmpty();
+            longWait.until(d -> {
+                boolean loading = !d.findElements(agLoadingOverlay).isEmpty();
                 if (loading) return false;
 
-                // 2️⃣ تحقق من وجود صفوف أو رسالة no rows
-                int rows = driver.findElements(tableRows).size();
-                boolean noRows = !driver.findElements(agNoRowsOverlay).isEmpty();
+                int rows = d.findElements(tableRows).size();
+                boolean noRows = !d.findElements(agNoRowsOverlay).isEmpty();
 
-                return rows > 0 || noRows;
+                return rows > 0 || noRows; // وصلنا لنتيجة نهائية
             });
 
-            int finalRowsCount = driver.findElements(tableRows).size();
+            int rowsCount = driver.findElements(tableRows).size();
+            boolean hasData = rowsCount > 0;
 
-            if (finalRowsCount > 0) {
-                System.out.println("✅ SUCCESS: Report contains data. Rows count = " + finalRowsCount);
-                return true;
+            if (hasData) {
+                System.out.println("✅ The number of records | rows=" + rowsCount);
             } else {
-                System.out.println("⚠️ INFO: Report loaded but NO data found (No Rows Overlay shown)");
-                return false;
+                System.out.println("⚠️ Report Has no data (No Data overlay appearing)");
             }
 
+            return hasData;
+
         } catch (TimeoutException e) {
-            System.out.println("❌ ERROR: Timeout while waiting for report data to load");
+            // تشخيص مفيد جدًا بدل رسالة عامة
+            boolean loading = !driver.findElements(agLoadingOverlay).isEmpty();
+            boolean noRows = !driver.findElements(agNoRowsOverlay).isEmpty();
+            int rows = driver.findElements(tableRows).size();
+
+            System.out.println("❌ Timeout: no result");
+            System.out.println("   loading=" + loading + " | noRows=" + noRows + " | rows=" + rows);
+
             return false;
         }
     }
 
-
-
 }
+
