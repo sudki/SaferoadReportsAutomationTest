@@ -31,39 +31,47 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
+      # مهم: نخلي الاختبارات تكمل حتى لو فشلت عشان نقدر نولد تقرير Allure
       - name: Run tests
-        run: mvn -DsuiteXmlFile=testng-daily-reports.xml test -Dallure.results.directory=allure-results
+        continue-on-error: true
+        run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
 
+      # شوف وين الملفات انولدت فعليًا (للتأكد)
+      - name: Debug - list allure folders
+        if: always()
+        run: |
+          echo "=== base dir ==="
+          ls -la
+          echo "=== target/site ==="
+          ls -la target || true
+          ls -la target/site || true
+          echo "=== allure-results ==="
+          ls -la allure-results || true
+
+      # يولد HTML (عادة داخل target/site/allure-maven-plugin)
       - name: Generate Allure report
         if: always()
-        run: mvn -q allure:report
+        run: mvn allure:report
 
+      # تأكد أن index.html موجود
       - name: Check report exists
         if: always()
-        run: ls -la allure-report && test -f allure-report/index.html
+        run: |
+          ls -la target/site/allure-maven-plugin
+          test -f target/site/allure-maven-plugin/index.html
 
-
-      - name: Upload Allure report as artifact (optional)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: allure-report
-
-      - name: Upload Allure report to Pages
+      # هذا اللي يرفعه ل GitHub Pages
+      - name: Upload Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
-          path: allure-report
+          path: target/site/allure-maven-plugin
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
     steps:
-      - name: Deploy
-        id: deployment
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
