@@ -53,19 +53,21 @@ jobs:
         if: always()
         run: mvn allure:report
 
-      # تأكد أن index.html موجود
-      - name: Check report exists
+      - name: Prepare Pages folder (make index.html)
         if: always()
         run: |
-          ls -la target/site/allure-maven-plugin
-          test -f target/site/allure-maven-plugin/index.html
+          rm -rf public
+          mkdir -p public
+          cp target/site/allure-maven-plugin/allure-maven.html public/index.html
+          ls -la public
+          test -f public/index.html
 
-      # هذا اللي يرفعه ل GitHub Pages
       - name: Upload Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
-          path: target/site/allure-maven-plugin
+          path: public
+
 
   deploy:
     needs: build
