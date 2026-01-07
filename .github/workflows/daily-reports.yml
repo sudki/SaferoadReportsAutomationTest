@@ -5,7 +5,10 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"   # 9 صباحًا بتوقيت الأردن (UTC+3)
+    - cron: "0 6 * * *"   # 9 AM Jordan (UTC+3)
+
+permissions:
+  contents: write
 
 jobs:
   test:
@@ -18,13 +21,36 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
 
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
-      - name: Run tests
-        run: mvn test
+      - name: Run TestNG suite
+        run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
 
+      # ✅ حفظ allure-results كـ artifact (حتى لو التست فشل)
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
 
+      # ✅ توليد Allure HTML Report
+      - name: Generate Allure report
+        if: always()
+        run: |
+          curl -Ls https://github.com/allure-framework/allure2/releases/latest/download/allure-2.29.0.tgz -o allure.tgz
+          tar -xzf allure.tgz
+          ./allure-2.29.0/bin/allure generate allure-results -o allure-report --clean
+
+      # ✅ نشر التقرير على GitHub Pages (فرع gh-pages)
+      - name: Deploy Allure report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
+          publish_branch: gh-pages

@@ -2,6 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.saferoad</groupId>
@@ -12,9 +13,13 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Allure versions -->
+        <allure.version>2.27.0</allure.version>
     </properties>
 
     <dependencies>
+
         <!-- Selenium -->
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -30,28 +35,46 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- WebDriverManager (لتنزيل الدرايفر أوتوماتيكياً) -->
+        <!-- WebDriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.8.0</version>
         </dependency>
+
+        <!-- Allure TestNG (المهم لتوليد allure-results) -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>${allure.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Allure annotations (@Step, @Attachment) -->
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-java-commons</artifactId>
+            <version>${allure.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
         <plugins>
+
+            <!-- Maven Surefire + TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
 
                 <configuration>
-                    <!-- ✅ شغّل TestNG Suite -->
+                    <!-- تشغيل TestNG Suite -->
                     <suiteXmlFiles>
                         <suiteXmlFile>testng-daily-reports.xml</suiteXmlFile>
                     </suiteXmlFiles>
 
-                    <!-- (اختياري) نفس إعدادك السابق -->
+                    <!-- نستخدم Allure Listener فقط -->
                     <properties>
                         <property>
                             <name>usedefaultlisteners</name>
@@ -59,8 +82,15 @@
                         </property>
                     </properties>
                 </configuration>
-
             </plugin>
+
+            <!-- Allure Maven Plugin (تحويل النتائج إلى HTML) -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>2.12.0</version>
+            </plugin>
+
         </plugins>
     </build>
 

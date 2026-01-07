@@ -99,7 +99,7 @@ public class ReportsPage {
             return hasData;
 
         } catch (TimeoutException e) {
-            // تشخيص مفيد جدًا بدل رسالة عامة
+
             boolean loading = !driver.findElements(agLoadingOverlay).isEmpty();
             boolean noRows = !driver.findElements(agNoRowsOverlay).isEmpty();
             int rows = driver.findElements(tableRows).size();
