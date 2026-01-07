@@ -31,53 +31,10 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
-      # مهم: نخلي الاختبارات تكمل حتى لو فشلت عشان نقدر نولد تقرير Allure
-      - name: Run tests
+      # مهم: نخلي التست يكمل حتى لو فشل عشان نولد تقرير Allure
+      - name: Run tests (generate allure-results)
         continue-on-error: true
         run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
 
-      # شوف وين الملفات انولدت فعليًا (للتأكد)
-      - name: Debug - list allure folders
-        if: always()
-        run: |
-          echo "=== base dir ==="
-          ls -la
-          echo "=== target/site ==="
-          ls -la target || true
-          ls -la target/site || true
-          echo "=== allure-results ==="
-          ls -la allure-results || true
-
-      # يولد HTML (عادة داخل target/site/allure-maven-plugin)
-      - name: Generate Allure report
-        if: always()
-        uses: simple-elf/allure-report-action@v1.9
-        with:
-          allure_results: allure-results
-          allure_report: allure-report
-          gh_pages: gh-pages
-
-      - name: Prepare Pages folder (make index.html)
-        if: always()
-        run: |
-          rm -rf public
-          mkdir -p public
-          cp target/site/allure-maven-plugin/allure-maven.html public/index.html
-          ls -la public
-          test -f public/index.html
-
-      - name: Upload Pages artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: allure-report
-
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      # يولد التقرير داخل: target/site/allure-maven-plugin/
+      - name: Generate All
