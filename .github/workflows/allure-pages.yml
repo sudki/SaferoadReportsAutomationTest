@@ -37,4 +37,52 @@ jobs:
         run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
 
       # يولد التقرير داخل: target/site/allure-maven-plugin/
-      - name: Generate All
+      - name: Generate Allure report (Maven)
+        if: always()
+        run: mvn allure:report
+
+      # تجهيز مجلد Pages لازم يحتوي index.html
+      - name: Prepare Pages folder
+        if: always()
+        run: |
+          rm -rf public
+          mkdir -p public
+
+          # انسخ ناتج التقرير
+          cp -R target/site/allure-maven-plugin/* public/ || true
+
+          # لو ما فيه index.html، أنشئ واحد يفتح allure-maven.html
+          if [ ! -f public/index.html ]; then
+            cat > public/index.html <<'EOF'
+            <!doctype html>
+            <html>
+              <head>
+                <meta charset="utf-8" />
+                <meta http-equiv="refresh" content="0; url=allure-maven.html" />
+                <title>Allure Report</title>
+              </head>
+              <body>
+                <a href="allure-maven.html">Open Allure Report</a>
+              </body>
+            </html>
+            EOF
+          fi
+
+          # Debug سريع عشان نشوف الملفات اللي انرفعت
+          ls -la public
+
+      - name: Upload Pages artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Deploy
+        uses: actions/deploy-pages@v4
