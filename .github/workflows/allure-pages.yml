@@ -51,7 +51,11 @@ jobs:
       # يولد HTML (عادة داخل target/site/allure-maven-plugin)
       - name: Generate Allure report
         if: always()
-        run: mvn allure:report
+        uses: simple-elf/allure-report-action@v1.9
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          gh_pages: gh-pages
 
       - name: Prepare Pages folder (make index.html)
         if: always()
@@ -66,7 +70,7 @@ jobs:
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: allure-report
 
 
   deploy:
