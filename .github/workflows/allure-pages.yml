@@ -10,10 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -31,51 +27,18 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
-      # مهم: نخلي التست يكمل حتى لو فشل عشان نولد تقرير Allure
-      - name: Run tests (generate allure-results)
-        continue-on-error: true
-        run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
+      - name: Run tests
+        run: mvn clean test
 
-      # يولد التقرير داخل: target/site/allure-maven-plugin/
       - name: Generate Allure report (Maven)
         if: always()
         run: mvn allure:report
-
-      # تجهيز مجلد Pages لازم يحتوي index.html
-      - name: Prepare Pages folder
-        if: always()
-        run: |
-          rm -rf public
-          mkdir -p public
-
-          # انسخ ناتج التقرير
-          cp -R target/site/allure-maven-plugin/* public/ || true
-
-          # لو ما فيه index.html، أنشئ واحد يفتح allure-maven.html
-          if [ ! -f public/index.html ]; then
-            cat > public/index.html <<'EOF'
-            <!doctype html>
-            <html>
-              <head>
-                <meta charset="utf-8" />
-                <meta http-equiv="refresh" content="0; url=allure-maven.html" />
-                <title>Allure Report</title>
-              </head>
-              <body>
-                <a href="allure-maven.html">Open Allure Report</a>
-              </body>
-            </html>
-            EOF
-          fi
-
-          # Debug سريع عشان نشوف الملفات اللي انرفعت
-          ls -la public
 
       - name: Upload Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: target/site/allure-maven-plugin
 
   deploy:
     needs: build
@@ -84,5 +47,5 @@ jobs:
       name: github-pages
 
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
