@@ -42,7 +42,7 @@
             <version>5.8.0</version>
         </dependency>
 
-        <!-- Allure TestNG (المهم لتوليد allure-results) -->
+        <!-- Allure TestNG (ينتج allure-results) -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
@@ -74,7 +74,12 @@
                         <suiteXmlFile>testng-daily-reports.xml</suiteXmlFile>
                     </suiteXmlFiles>
 
-                    <!-- نستخدم Allure Listener فقط -->
+                    <!-- ✅ أهم سطر: خلي Allure results تنحفظ في target/allure-results -->
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
+
+                    <!-- (اختياري) لو بدك توقف Default Listeners -->
                     <properties>
                         <property>
                             <name>usedefaultlisteners</name>
@@ -84,7 +89,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Allure Maven Plugin (تحويل النتائج إلى HTML) -->
+            <!-- Allure Maven Plugin (يحوّل النتائج إلى HTML) -->
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
