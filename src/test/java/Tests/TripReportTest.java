@@ -2,12 +2,13 @@ package Tests;
 
 import Base.BaseTest;
 
+import io.qameta.allure.Allure;
+import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import Pages.LoginPage;
 import Pages.ReportsPage;
 
-import java.time.Duration;
 
 public class TripReportTest extends BaseTest {
 
@@ -23,9 +24,12 @@ public class TripReportTest extends BaseTest {
         reportsPage.clickShowReports();
 
         boolean hasData = reportsPage.isReportHasData();
-        System.out.println("✅ Trip Report hasData = " + hasData);
+        int rows = driver.findElements(By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")).size();
+        Allure.addAttachment("Records Count (Trip Report)", String.valueOf(rows));
 
-        Assert.assertTrue(hasData, "Trip Report has NO data");
+        System.out.println("✅ Trip Report hasData = " + hasData + " | rows = " + rows);
+
+        Assert.assertTrue(rows > 0, "Trip Report has NO data. Rows=" + rows);
     }
 
 }
