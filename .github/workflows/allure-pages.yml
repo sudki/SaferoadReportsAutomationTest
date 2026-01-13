@@ -33,13 +33,14 @@ jobs:
 
       - name: Generate Allure report (Maven)
         if: always()
-        run: mvn allure:report -Dallure.results.directory=target/allure-results
+        run: mvn -Dallure.results.directory=target/allure-results allure:report
 
       - name: Upload Allure report
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
-          path: target/site/allure-maven
+         path: target/site/allure-maven
+
 
   deploy:
     needs: build
