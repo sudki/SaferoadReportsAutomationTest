@@ -13,7 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,15 +26,22 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
-      - name: Run tests
+      - name: Run tests (even if fail)
         run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
         continue-on-error: true
 
+      - name: Debug - show allure results folder
+        if: always()
+        run: |
+          ls -la
+          ls -la target || true
+          ls -la target/allure-results || true
+
       - name: Generate Allure report (Maven)
         if: always()
-        run: mvn -Dallure.results.directory=target/allure-results allure:report
+        run: mvn allure:report
 
-      - name: Upload Allure report
+      - name: Upload Allure report to Pages
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
@@ -46,7 +52,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
