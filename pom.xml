@@ -50,13 +50,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Allure annotations (@Step, @Attachment) -->
-        <dependency>
-            <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-java-commons</artifactId>
-            <version>${allure.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>

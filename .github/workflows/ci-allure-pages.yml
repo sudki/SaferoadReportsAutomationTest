@@ -4,8 +4,6 @@ on:
   push:
     branches: [ "main", "master" ]
   workflow_dispatch:
-  schedule:
-    - cron: "0 6 * * *"   # 9 صباحًا بتوقيت الأردن (UTC+3)
 
 permissions:
   contents: read
@@ -34,33 +32,32 @@ jobs:
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@v1
 
-      # (اختياري لكن مفيد) اطبع نسخة كروم للتشخيص
-      - name: Check Chrome version
-        run: chrome --version
-
-      # ✅ شغّل التست
-      # continue-on-error: true -> حتى لو فشل التست، نكمل ونطلع تقرير Allure
       - name: Run TestNG suite
         run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
         continue-on-error: true
 
-      # (مفيد للتأكد) شو طلع داخل target
-      - name: Debug - list target folders
+      # 🔍 تأكيد أن النتائج موجودة
+      - name: Debug - list allure results
         if: always()
         run: |
           echo "=== target ==="
           ls -la target || true
-          echo "=== target/allure-results ==="
+          echo "=== allure-results ==="
           ls -la target/allure-results || true
 
-      # ✅ توليد تقرير Allure HTML من النتائج
-      # هذا يعتمد على io.qameta.allure:allure-maven الموجود في pom.xml
+      # ✅ توليد تقرير Allure HTML
       - name: Generate Allure report (Maven)
         if: always()
         run: mvn allure:report
 
-      # ✅ ارفع صفحات GitHub Pages من مسار تقرير Allure
-      # (هذا أهم سطر) لازم يكون المسار الصحيح
+      # 🔍 تأكيد أن التقرير انولد
+      - name: Debug - list allure report
+        if: always()
+        run: |
+          ls -la target/site || true
+          ls -la target/site/allure-maven || true
+
+      # ✅ رفع التقرير إلى GitHub Pages
       - name: Upload Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
@@ -72,9 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
