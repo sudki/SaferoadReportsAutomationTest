@@ -55,14 +55,14 @@ jobs:
         if: always()
         run: |
           ls -la target/site || true
-          ls -la target/site/allure-maven || true
+          ls -la target/site/allure-maven-plugin || true
 
       # ✅ رفع التقرير إلى GitHub Pages
       - name: Upload Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
-          path: target/site/allure-maven
+          path: target/site/allure-maven-plugin
 
   deploy:
     needs: test-and-report

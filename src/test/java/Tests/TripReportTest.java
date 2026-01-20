@@ -26,9 +26,7 @@ public class TripReportTest extends BaseTest {
         boolean hasData = reportsPage.isReportHasData();
         int rows = driver.findElements(By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")).size();
         Allure.addAttachment("Records Count (Trip Report)", String.valueOf(rows));
-
         System.out.println("✅ Trip Report hasData = " + hasData + " | rows = " + rows);
-
         Assert.assertTrue(rows > 0, "Trip Report has NO data. Rows=" + rows);
     }
 
