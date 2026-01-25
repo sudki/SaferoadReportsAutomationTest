@@ -64,6 +64,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: target/site/allure-maven-plugin
+          artifact_name: allure-pages  # ✅ اسم مختلف لتجنب تضارب
 
   deploy:
     needs: test-and-report
@@ -74,6 +75,8 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: allure-pages  # نفس الاسم هنا
 
       - name: Send Smart Email (Success / Failure)
         if: always()
@@ -81,8 +84,8 @@ jobs:
         with:
           server_address: smtp.gmail.com
           server_port: 587
-          username: ${{ secrets.SMTP_USERNAME }}
-          password: ${{ secrets.SMTP_PASSWORD }}
+          username: ${{ secrets.SMTP_USERNAME }}  # Gmail البريد
+          password: ${{ secrets.SMTP_PASSWORD }}  # App Password
           to: sudki.kfa@gmail.com
           from: GitHub Actions
           subject: ${{ job.status == 'success' && '✅ Daily CI Passed' || '❌ Daily CI Failed' }}
