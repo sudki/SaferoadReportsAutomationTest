@@ -4,6 +4,8 @@ on:
   push:
     branches: [ "main", "master" ]
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"  # كل يوم الساعة 9 صباحًا بتوقيت الأردن (UTC+3)
 
 permissions:
   contents: read
@@ -34,7 +36,6 @@ jobs:
 
       - name: Run TestNG suite
         run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
-        continue-on-error: true
 
       # 🔍 تأكيد أن النتائج موجودة
       - name: Debug - list allure results
@@ -73,3 +74,26 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+
+      - name: Send Smart Email (Success / Failure)
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: sudki.kfa@gmail.com
+          from: GitHub Actions
+          subject: ${{ job.status == 'success' && '✅ Daily CI Passed' || '❌ Daily CI Failed' }}
+          body: |
+            Daily CI execution finished.
+
+            Status: ${{ job.status }}
+
+            Allure Report:
+            https://sudki.github.io/SaferoadReportsAutomation/
+
+            Branch: ${{ github.ref_name }}
+            Triggered by: ${{ github.event_name }}
+            Run ID: ${{ github.run_id }}
