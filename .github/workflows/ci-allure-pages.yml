@@ -5,7 +5,7 @@ on:
     branches: [ "main", "master" ]
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"  # كل يوم الساعة 9 صباحًا بتوقيت الأردن (UTC+3)
+    - cron: "0 6 * * *"   # 9 صباحًا بتوقيت الأردن (UTC+3)
 
 permissions:
   contents: read
@@ -37,34 +37,22 @@ jobs:
       - name: Run TestNG suite
         run: mvn -DsuiteXmlFile=testng-daily-reports.xml test
 
-      # 🔍 تأكيد أن النتائج موجودة
-      - name: Debug - list allure results
-        if: always()
-        run: |
-          echo "=== target ==="
-          ls -la target || true
-          echo "=== allure-results ==="
-          ls -la target/allure-results || true
-
-      # ✅ توليد تقرير Allure HTML
-      - name: Generate Allure report (Maven)
-        if: always()
+      - name: Generate Allure report
         run: mvn allure:report
 
-      # 🔍 تأكيد أن التقرير انولد
-      - name: Debug - list allure report
-        if: always()
+      # 🔎 تأكيد وجود التقرير
+      - name: Debug - Allure report files
         run: |
-          ls -la target/site || true
-          ls -la target/site/allure-maven-plugin || true
+          echo "=== target/site ==="
+          ls -la target/site
+          echo "=== allure-maven-plugin ==="
+          ls -la target/site/allure-maven-plugin
 
-      # ✅ رفع التقرير إلى GitHub Pages
+      # ✅ الطريقة الرسمية الصحيحة لـ GitHub Pages
       - name: Upload Pages artifact
-        if: always()
         uses: actions/upload-pages-artifact@v3
         with:
           path: target/site/allure-maven-plugin
-          artifact_name: allure-pages  # ✅ اسم مختلف لتجنب تضارب
 
   deploy:
     needs: test-and-report
@@ -75,17 +63,15 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: allure-pages  # نفس الاسم هنا
 
-      - name: Send Smart Email (Success / Failure)
+      - name: Send Email Notification
         if: always()
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
           server_port: 587
-          username: ${{ secrets.SMTP_USERNAME }}  # Gmail البريد
-          password: ${{ secrets.SMTP_PASSWORD }}  # App Password
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
           to: sudki.kfa@gmail.com
           from: GitHub Actions
           subject: ${{ job.status == 'success' && '✅ Daily CI Passed' || '❌ Daily CI Failed' }}
