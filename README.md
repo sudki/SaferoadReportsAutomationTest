@@ -24,6 +24,6 @@ The main goal of this project is to automate test execution and publish clear, r
 
 -Maven
 
-GitHub Actions (CI/CD)
+GitHub Actions (CI)
 
 -Allure Reports 

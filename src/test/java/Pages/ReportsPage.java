@@ -1,10 +1,10 @@
 package Pages;
 
-import Tests.WHM_Reports;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.*;
 import java.time.Duration;
-import java.util.List;
+
 
 public class ReportsPage {
 

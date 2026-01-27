@@ -82,7 +82,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Allure Maven Plugin (يحوّل النتائج إلى HTML) -->
+            <!-- Allure Maven Plugin (يحوّل النتائج  HTML) -->
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>

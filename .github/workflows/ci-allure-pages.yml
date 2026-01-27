@@ -5,7 +5,7 @@ on:
     branches: [ "master" ]
   workflow_dispatch:
   schedule:
-  - cron: "* * * * *"
+  - cron: "0 6 * * *"
 
 permissions:
   contents: read
@@ -81,7 +81,7 @@ jobs:
             Status: ${{ job.status }}
 
             Allure Report:
-            https://sudki.github.io/SaferoadReportsAutomation/
+            https://sudki.github.io/SaferoadReportsAutomationTest/
 
             Branch: ${{ github.ref_name }}
             Triggered by: ${{ github.event_name }}
