@@ -2,10 +2,10 @@ name: CI - Tests + Allure + GitHub Pages
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "master" ]
   workflow_dispatch:
   schedule:
-    - cron: "0 6 * * *"   # 9 صباحًا بتوقيت الأردن (UTC+3)
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: read
