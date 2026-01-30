@@ -28,3 +28,4 @@ readable test reports that help the team quickly understand test results and sys
 -GitHub Actions (CI)
 
 -Allure Reports 
+
