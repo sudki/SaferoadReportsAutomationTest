@@ -25,6 +25,6 @@ readable test reports that help the team quickly understand test results and sys
 
 -Maven
 
-GitHub Actions (CI)
+-GitHub Actions (CI)
 
 -Allure Reports 
