@@ -1,4 +1,4 @@
-name: CI - Tests + Allure + GitHub Pages
+name: Saferoad Daily Report Automation Test
 
 on:
   push:
@@ -40,7 +40,7 @@ jobs:
       - name: Generate Allure report
         run: mvn allure:report
 
-      # 🔎 تأكيد وجود التقرير
+
       - name: Debug - Allure report files
         run: |
           echo "=== target/site ==="
@@ -48,7 +48,6 @@ jobs:
           echo "=== allure-maven-plugin ==="
           ls -la target/site/allure-maven-plugin
 
-      # ✅ الطريقة الرسمية الصحيحة لـ GitHub Pages
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -74,7 +73,7 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           to: sudki.kfa@gmail.com
           from: GitHub Actions
-          subject: ${{ job.status == 'success' && '✅ Daily CI Passed' || '❌ Daily CI Failed' }}
+          subject: ${{ job.status == 'success' && 'Daily Report Passed' || 'Daily Report Failed' }}
           body: |
             Daily CI execution finished.
 

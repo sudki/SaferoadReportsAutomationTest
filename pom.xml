@@ -42,7 +42,6 @@
             <version>5.8.0</version>
         </dependency>
 
-        <!-- Allure TestNG (ينتج allure-results) -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
@@ -55,24 +54,22 @@
     <build>
         <plugins>
 
-            <!-- Maven Surefire + TestNG -->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
 
                 <configuration>
-                    <!-- تشغيل TestNG Suite -->
+
                     <suiteXmlFiles>
                         <suiteXmlFile>testng-daily-reports.xml</suiteXmlFile>
                     </suiteXmlFiles>
 
-                    <!-- ✅ أهم سطر: خلي Allure results تنحفظ في target/allure-results -->
                     <systemPropertyVariables>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                     </systemPropertyVariables>
 
-                    <!-- (اختياري) لو بدك توقف Default Listeners -->
                     <properties>
                         <property>
                             <name>usedefaultlisteners</name>
@@ -82,7 +79,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Allure Maven Plugin (يحوّل النتائج  HTML) -->
+
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>

@@ -1,10 +1,11 @@
-Saferoad Automation Reports 🚦
-📌 Project Overview
+Saferoad Automation Reports :
 
-This repository contains the automation testing framework and generated reports for the Saferoad project.
-The main goal of this project is to automate test execution and publish clear, readable test reports that help the team quickly understand test results and system quality.
+- Project Overview
 
-🎯 Project Objectives
+The main goal of this project is to automate test execution and publish clear,
+readable test reports that help the team quickly understand test results and system quality.
+
+* Project Objectives
 
 -Automate functional and regression test cases
 
@@ -14,16 +15,11 @@ The main goal of this project is to automate test execution and publish clear, r
 
 -Publish reports automatically using GitHub Actions & GitHub Pages
 
-🛠 Tech Stack & Tools
+* Tech Stack & Tools
 
 -Java
-
 -Selenium WebDriver
-
 -TestNG
-
 -Maven
-
 GitHub Actions (CI)
-
 -Allure Reports 

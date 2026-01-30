@@ -27,15 +27,14 @@ public class BaseTest {
             options.addArguments("disable-dev-shm-usage");
 
         }
-        // تشغيل Chrome بوضع Guest (بدون Google Account / Sync)
+
         options.addArguments("--guest");
 
-        // تعطيل أي نوافذ أو تنبيهات
+
         options.addArguments("disable-notifications");
         options.addArguments("disable-save-password-bubble");
         options.addArguments("disable-features=PasswordLeakDetection,PasswordManagerOnboarding,PasswordChange");
 
-        // تعطيل Password Manager نهائياً
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("credentials_enable_service", false);
         prefs.put("profile.password_manager_enabled", false);
