@@ -29,10 +29,10 @@ public class WHM_Reports extends BaseTest {
         System.out.println("✅ WHM Report hasData = " + hasData + " | rows = " + rows);
         if (rows == 0) {
             Allure.addAttachment(
-                    "Trip Report Status",
-                    "Report generated successfully but returned NO DATA for selected filters"
+                    "WHM Report Status",
+                    "Report generated successfully but returned NO DATA "
             );
-            System.out.println("⚠️ Trip Report generated but has no data");
+            System.out.println("⚠️ WHM Report generated but has no data");
         }
 
         Assert.assertTrue(true, "Trip Report page loaded successfully");

@@ -30,7 +30,7 @@ public class TripReportTest extends BaseTest {
         if (rows == 0) {
             Allure.addAttachment(
                     "Trip Report Status",
-                    "Report generated successfully but returned NO DATA for selected filters"
+                    "Report generated successfully but returned NO DATA "
             );
             System.out.println("⚠️ Trip Report generated but has no data");
         }
