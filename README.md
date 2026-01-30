@@ -18,8 +18,13 @@ readable test reports that help the team quickly understand test results and sys
 * Tech Stack & Tools
 
 -Java
+
 -Selenium WebDriver
+
 -TestNG
+
 -Maven
+
 GitHub Actions (CI)
+
 -Allure Reports 
