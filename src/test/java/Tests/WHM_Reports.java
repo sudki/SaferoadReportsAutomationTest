@@ -2,6 +2,7 @@ package Tests;
 
 import Base.BaseTest;
 
+import config.TestConfig;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -15,7 +16,7 @@ public class WHM_Reports extends BaseTest {
     public void testWHMreportHasData(){
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login("Demo1234","O@2023d");
+        loginPage.login(TestConfig.USERNAME,TestConfig.PASSWORD);
 
         ReportsPage reportsPage = new ReportsPage(driver);
         reportsPage.openWHM_Reports();
@@ -26,13 +27,13 @@ public class WHM_Reports extends BaseTest {
         boolean hasData = reportsPage.isReportHasData();
         int rows = driver.findElements(By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")).size();
         Allure.addAttachment("Records Count (WHM report)", String.valueOf(rows));
-        System.out.println("✅ WHM Report hasData = " + hasData + " | rows = " + rows);
+        System.out.println(" WHM Report hasData = " + hasData + " | rows = " + rows);
         if (rows == 0) {
             Allure.addAttachment(
                     "WHM Report Status",
                     "Report generated successfully but returned NO DATA "
             );
-            System.out.println("⚠️ WHM Report generated but has no data");
+            System.out.println(" WHM Report generated but has no data");
         }
 
         Assert.assertTrue(true, "Trip Report page loaded successfully");

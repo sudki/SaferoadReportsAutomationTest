@@ -17,7 +17,7 @@ public class ReportsPage {
 
     // ===================== Locators =====================
     private By sidebarToggleBtn =
-            By.xpath("//div[@class='sidebar-toggle' and @data-toggle='sidebar']");
+            By.xpath("//div[contains(@class,'sidebar-toggle')]");
 
     private By reportsMenu =
             By.xpath("//span[@class='item-name' and normalize-space()='Reports']");
@@ -45,11 +45,15 @@ public class ReportsPage {
     private By agLoadingOverlay =
             By.cssSelector(".ag-overlay-loading-center");
 
-    // ===================== Common Actions =====================
+
     private void jsClick(By locator) {
-        WebElement el = wait.until(ExpectedConditions.elementToBeClickable(locator));
+        WebElement el = wait.until(
+                ExpectedConditions.presenceOfElementLocated(locator)
+        );
+
         try {
-            el.click(); // click عادي أولاً
+            wait.until(ExpectedConditions.elementToBeClickable(el));
+            el.click();
         } catch (Exception e) {
             ((JavascriptExecutor) driver)
                     .executeScript("arguments[0].click();", el);
@@ -101,7 +105,7 @@ public class ReportsPage {
 
         try {
             int timeoutSeconds =
-                    Integer.parseInt(System.getProperty("WAIT_SECONDS", "90"));
+                    Integer.parseInt(System.getProperty("WAIT_SECONDS", "60"));
 
             WebDriverWait longWait =
                     new WebDriverWait(driver, Duration.ofSeconds(timeoutSeconds));
@@ -127,7 +131,7 @@ public class ReportsPage {
                 System.out.println("✅ Report has data | rows=" + rowsCount);
                 return true;
             } else {
-                System.out.println("⚠️ Report generated but has NO DATA");
+                System.out.println("Report generated but has NO DATA");
                 return false;
             }
 

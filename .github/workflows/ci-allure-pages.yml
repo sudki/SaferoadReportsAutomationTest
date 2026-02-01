@@ -73,7 +73,7 @@ jobs:
           password: ${{ secrets.SMTP_PASSWORD }}
           to: sudki.kfa@gmail.com
           from: GitHub Actions
-          subject: ${{ job.status == 'success' && 'Daily Report Passed' || 'Daily Report Failed' }}
+          subject: ${{ job.status == 'success' && 'Daily Report Status' || 'Daily Report Failed' }}
           body: |
             Daily CI execution finished.
 

@@ -2,12 +2,11 @@
 
 <suite name="Daily Reports Suite" parallel="false">
 
-    <!-- ✅ Allure Listener -->
+    <!-- Allure Listener -->
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
 
-    <!-- مجموعة اختبارات التقارير -->
     <test name="Reports">
 
         <classes>
@@ -17,9 +16,9 @@
             <!-- WHM Reports -->
             <class name="Tests.WHM_Reports"/>
 
-            <!-- Speed Report (معطّل حالياً)
+            <!-- Speed Report -->
             <class name="Tests.SpeedReportTest"/>
-            -->
+
         </classes>
 
     </test>
