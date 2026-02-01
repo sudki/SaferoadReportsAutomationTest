@@ -11,10 +11,10 @@
 
         <classes>
             <!-- Trip Report -->
-            <class name="Tests.TripReportTest"/>
+            <class name="Tests.TripReport"/>
 
             <!-- WHM Reports -->
-            <class name="Tests.WHM_Reports"/>
+            <class name="Tests.WHM_Report"/>
 
             <!-- Speed Report -->
             <class name="Tests.SpeedReportTest"/>

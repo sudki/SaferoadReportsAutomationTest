@@ -1,23 +1,26 @@
 package Tests;
 
 import Base.BaseTest;
-
 import config.TestConfig;
 import io.qameta.allure.Allure;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.openqa.selenium.By;
-import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 import Pages.LoginPage;
 import Pages.ReportsPage;
 
-
 public class TripReport extends BaseTest {
 
     @Test
+    @Severity(SeverityLevel.MINOR)
     public void TripReportTest() {
 
+
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(TestConfig.USERNAME,TestConfig.PASSWORD);
+        loginPage.login(TestConfig.USERNAME, TestConfig.PASSWORD);
+
 
         ReportsPage reportsPage = new ReportsPage(driver);
         reportsPage.openTripReport();
@@ -25,18 +28,35 @@ public class TripReport extends BaseTest {
         reportsPage.clickShowReports();
 
         boolean hasData = reportsPage.isReportHasData();
-        int rows = driver.findElements(By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")).size();
-        Allure.addAttachment("Records Count (Trip Report)", String.valueOf(rows));
+
+        int rows = driver.findElements(
+                By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")
+        ).size();
+
+        Allure.addAttachment(
+                "Records Count (Trip Report)",
+                String.valueOf(rows)
+        );
+
         System.out.println("Trip Report hasData = " + hasData + " | rows = " + rows);
-        if (rows == 0) {
+
+        if (!hasData) {
+
             Allure.addAttachment(
-                    "Trip Report Status",
-                    "Report generated successfully but returned NO DATA "
+                    "⚠️ Trip Report Warning",
+                    "Report generated successfully but returned NO DATA"
             );
-            System.out.println("Trip Report generated but has no data");
+
+            System.out.println("⚠️ Trip Report generated but has NO DATA");
+
+
+            throw new SkipException("NO DATA - Hard Ware issue");
         }
 
-        Assert.assertTrue(true, "Trip Report page loaded successfully");
-    }
 
+        Allure.addAttachment(
+                "Trip Report Status",
+                "✅ Report contains data"
+        );
+    }
 }
