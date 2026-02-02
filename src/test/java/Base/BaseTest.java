@@ -29,8 +29,6 @@ public class BaseTest {
         }
 
         options.addArguments("--guest");
-
-
         options.addArguments("disable-notifications");
         options.addArguments("disable-save-password-bubble");
         options.addArguments("disable-features=PasswordLeakDetection,PasswordManagerOnboarding,PasswordChange");

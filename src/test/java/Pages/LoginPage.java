@@ -16,11 +16,14 @@ public class LoginPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
-    // Locators
+
     private final By username = By.id("username");
     private final By password = By.id("password");
     private final By signInBtn =
             By.xpath("//button[@type='submit' or contains(.,'Sign In')]");
+
+    private final By chatTooltip =
+            By.cssSelector(".zsiq-tultip-desc");
 
     public void login(String user, String pass) {
 
@@ -38,12 +41,15 @@ public class LoginPage {
         p.clear();
         p.sendKeys(pass);
 
-        // ✅ click عادي
+        wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(chatTooltip)
+        );
+
         wait.until(
                 ExpectedConditions.elementToBeClickable(signInBtn)
         ).click();
 
-        // تأكيد نجاح تسجيل الدخول
+
         wait.until(
                 ExpectedConditions.not(
                         ExpectedConditions.urlContains("/auth/signin")

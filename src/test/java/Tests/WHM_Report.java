@@ -6,10 +6,14 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 import Pages.LoginPage;
 import Pages.ReportsPage;
+
+import java.time.Duration;
 
 public class WHM_Report extends BaseTest {
 
@@ -24,7 +28,6 @@ public class WHM_Report extends BaseTest {
         reportsPage.openWHM_Reports();
         reportsPage.selectAllVehicles();
         reportsPage.clickShowReports();
-
         boolean hasData = reportsPage.isReportHasData();
 
         int rows = driver.findElements(
