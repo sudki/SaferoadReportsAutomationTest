@@ -48,7 +48,7 @@ public class SpeedReportTest extends BaseTest{
             System.out.println("⚠️ OverSpeed Report generated but has NO DATA");
 
 
-            throw new SkipException("NO DATA - Hard Ware issue");
+            throw new SkipException("NO DATA - HardWare issue");
         }
 
 

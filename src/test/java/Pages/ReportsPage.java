@@ -147,9 +147,7 @@ public class ReportsPage {
                     driver.findElements(tableRows).size();
 
             System.out.println("❌ Timeout waiting for report result");
-            System.out.println("   loading=" + loading +
-                    " | noRows=" + noRows +
-                    " | rows=" + rows);
+            System.out.println("   loading=" + loading + " | noRows=" + noRows + " | rows=" + rows);
 
             return false;
         }
