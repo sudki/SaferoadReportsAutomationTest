@@ -29,9 +29,7 @@ public class TripReport extends BaseTest {
 
         boolean hasData = reportsPage.isReportHasData();
 
-        int rows = driver.findElements(
-                By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")
-        ).size();
+        int rows = reportsPage.getRowsCount();
 
         Allure.addAttachment(
                 "Records Count (Trip Report)",
@@ -43,11 +41,11 @@ public class TripReport extends BaseTest {
         if (!hasData) {
 
             Allure.addAttachment(
-                    "⚠️ Trip Report Warning",
+                    " Trip Report Warning",
                     "Report generated successfully but returned NO DATA"
             );
 
-            System.out.println("⚠️ Trip Report generated but has NO DATA");
+            System.out.println(" Trip Report generated but has NO DATA");
 
 
             throw new SkipException("NO DATA - Hard Ware issue");
@@ -56,7 +54,7 @@ public class TripReport extends BaseTest {
 
         Allure.addAttachment(
                 "Trip Report Status",
-                "✅ Report contains data"
+                " Report contains data"
         );
     }
 }

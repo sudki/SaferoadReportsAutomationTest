@@ -27,9 +27,7 @@ public class SpeedReportTest extends BaseTest{
 
         boolean hasData = reportsPage.isReportHasData();
 
-        int rows = driver.findElements(
-                By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")
-        ).size();
+        int rows = reportsPage.getRowsCount();
 
         Allure.addAttachment(
                 "Records Count (OverSpeed Report)",
@@ -41,11 +39,11 @@ public class SpeedReportTest extends BaseTest{
         if (!hasData) {
 
             Allure.addAttachment(
-                    "⚠️ OverSpeed Report Warning",
+                    " OverSpeed Report Warning",
                     "Report generated successfully but returned NO DATA"
             );
 
-            System.out.println("⚠️ OverSpeed Report generated but has NO DATA");
+            System.out.println(" OverSpeed Report generated but has NO DATA");
 
 
             throw new SkipException("NO DATA - HardWare issue");
@@ -54,7 +52,7 @@ public class SpeedReportTest extends BaseTest{
 
         Allure.addAttachment(
                 "OverSpeed Report Status",
-                "✅ Report contains data"
+                " Report contains data"
         );
     }
 }

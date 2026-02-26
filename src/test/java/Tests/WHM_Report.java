@@ -28,9 +28,7 @@ public class WHM_Report extends BaseTest {
         reportsPage.clickShowReports();
         boolean hasData = reportsPage.isReportHasData();
 
-        int rows = driver.findElements(
-                By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0")
-        ).size();
+        int rows = reportsPage.getRowsCount();
 
         Allure.addAttachment(
                 "Records Count (WHM Report)",

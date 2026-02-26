@@ -39,6 +39,7 @@ public class ReportsPage {
     private By tableRows =
             By.cssSelector(".ag-center-cols-container .ag-row.ag-row-level-0");
 
+
     private By agNoRowsOverlay =
             By.cssSelector(".ag-overlay-no-rows-center");
 
@@ -97,7 +98,14 @@ public class ReportsPage {
                 .executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
 
         jsClick(showReportsBtn);
-        System.out.println("✅ Clicked: Show Reports");
+        System.out.println(" Clicked: Show Reports");
+    }
+    public int getRowsCount() {
+
+        int rowsCount = driver.findElements(tableRows).size();
+
+        System.out.println("Report rows count = " + rowsCount);
+        return rowsCount;
     }
 
     // ===================== Validation =====================
@@ -128,7 +136,7 @@ public class ReportsPage {
             int rowsCount = driver.findElements(tableRows).size();
 
             if (rowsCount > 0) {
-                System.out.println("✅ Report has data | rows=" + rowsCount);
+                System.out.println(" Report has data | rows=" + rowsCount);
                 return true;
             } else {
                 System.out.println("Report generated but has NO DATA");
@@ -146,7 +154,7 @@ public class ReportsPage {
             int rows =
                     driver.findElements(tableRows).size();
 
-            System.out.println("❌ Timeout waiting for report result");
+            System.out.println(" Timeout waiting for report result");
             System.out.println("   loading=" + loading + " | noRows=" + noRows + " | rows=" + rows);
 
             return false;
